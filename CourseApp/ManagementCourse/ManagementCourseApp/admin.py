@@ -1,10 +1,31 @@
 from django.contrib import admin
+from django.template.context_processors import request
+from django.template.response import TemplateResponse
+
 from .models import Category,Course,Lesson,Tag
 from django.utils.html import mark_safe
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-
+from django.urls import path
+from ManagementCourseApp import dao
 # kế thừa ModelAdmin
+
+
+class CourseAppAdminSite(admin.AdminSite):
+    site_header = 'quản lý khóa học'
+
+    def get_urls(self):
+        return  [
+            path('course-stats/',self.stats_view)
+        ]+super().get_urls()
+
+    def stats_view(self,request):
+        return TemplateResponse(request,'admin/stats.html',{
+            'stats': dao.count_courses_by_cate()
+        })
+
+
+admin_site = CourseAppAdminSite(name='App')
 
 
 class CategoryAdmin(admin.ModelAdmin):

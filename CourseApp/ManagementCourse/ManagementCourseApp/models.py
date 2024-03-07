@@ -1,10 +1,12 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
+
 class User(AbstractUser):
-    pass
+    avatar = CloudinaryField('avatar',null=True)
 
 # tạo lớp kế thừa
 
@@ -32,7 +34,7 @@ class Course (BaseModel):
     image = models.ImageField(upload_to='courses/%Y/%m/',null=True, blank=True)
 
     # thiết lập khóa ngoại => khóa học thuộc danh mục
-    category = models.ForeignKey(Category, on_delete=models.RESTRICT)
+    category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_query_name='courses')
     tags= models.ManyToManyField('Tag')
 
     def __str__(self):
@@ -62,3 +64,25 @@ class Tag(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class Interaction (BaseModel):
+    # ai l người tường tác
+    user = models.ForeignKey(User,on_delete=models.CASCADE, null= False)
+    # tương tác trên khóa học nào
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE ,null=False)
+
+    class Meta:
+        abstract = True
+
+
+class Comment(Interaction):
+    content = models.CharField(max_length=255, null=False)
+
+
+class Like(Interaction):
+    active = models.BooleanField()
+
+
+class Rating(Interaction):
+    rate = models.SmallIntegerField(default=0)

@@ -42,9 +42,27 @@ INSTALLED_APPS = [
     'ManagementCourseApp.apps.ManagementcourseappConfig',
     'ckeditor',
     'ckeditor_uploader',
-     "debug_toolbar",
+    'debug_toolbar',
+    'rest_framework',
+    'drf_yasg',
+    'oauth2_provider',
 ]
 CKEDITOR_UPLOAD_PATH = "ckeditor/images/"
+
+# oauth2 để tương tác với cloudinary
+import cloudinary
+
+cloudinary.config(
+    cloud_name="dhdca9ibd",
+    api_key="272148578137299",
+    api_secret="HUXUEPV5Y4lyRtuyx2yCkYnH6Wo"
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -134,3 +152,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# chứng thực
+CLIENT_ID = 'ykwM7j9N1XXGXZaT8EArPCcpzCVjN0Ya9yCifgTL'
+CLIENT_SECRET = 'nW2zSEM4ntrVKjFRn9gQASeCZbtVMLaMyEDXjIC4iHQpSWE2KNI9zfgdefGyrnPO32EXBYhfqMRAR1NKVyTaL2xfMt49vqgQV5bCj2Pt83uh9hXLm2zRKaPwq8KceXdy'
+
