@@ -1,10 +1,10 @@
-from threading import activeCount
-
 from rest_framework import viewsets, generics, status,parsers,permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from ManagementCourseApp.models import Category,Course,Lesson,User,Comment
+from ManagementCourseApp.models import Category,Course,Lesson,User,Comment,Like
 from ManagementCourseApp import serializers, paginators,perms
+from ManagementCourseApp.permission import IsAuthenticated,IsAdmin
+
 
 # Create your views here.
 
@@ -38,15 +38,14 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 # RetrieveAPIView: lấy chi tiết thông tin =>get
 # lấy danh sách lesson
-class LessonViewSet(viewsets.ViewSet, generics.ListAPIView):
+class LessonViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(active=True).all()
     serializer_class = serializers.LessonSerializer
-    permission_classes = [permissions.AllowAny]
-
+    # permission_classes = [perms.AdminAuthenticated]
+    #
     def get_permissions(self):
-        if self.action in ['add_comment']:
-            return [permissions.IsAuthenticated()] #đối tượng nên có dâu ngoặc tròn
-        return [self.permission_classes]
+        if self.action in ['add_comment', 'like']:
+            return [perms.AdminAuthenticated()]
 
 #     thêm comment
     @action(methods=['post'], url_path='comments', detail=True)
@@ -57,9 +56,20 @@ class LessonViewSet(viewsets.ViewSet, generics.ListAPIView):
         c = Comment.objects.create(user=request.user, lesson = self.get_object(),content = request.data.get('content'))
         return Response(serializers.CommentSerializer(c).data,status=status.HTTP_201_CREATED)
 
+    # like
+    @action(methods=['post'], url_path='like', detail=True)
+    def like(self,request,pk):
+        # nếu đã like bài viết thì created = false và ngược lại
+        like, created = Like.objects.update_or_create(user = request.user, lesson = self.get_object() )
+        if not created:
+            like.active = not like.active
+            like.save()
+
+        return Response(serializers.LessonDetailSerializer(self.get_object(),context={'request':request}).data,status=status.HTTP_200_OK)
+
 
 # DestroyAPIView => xóa
-class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = serializers.CommentSerializer
     permission_classes = [perms.OwnerAuthenticated]

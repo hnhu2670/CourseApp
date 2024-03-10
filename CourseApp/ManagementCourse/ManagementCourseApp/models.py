@@ -6,11 +6,13 @@ from cloudinary.models import CloudinaryField
 
 
 class User(AbstractUser):
+    role = models.CharField(max_length=255,null=True, default='user')
     avatar = CloudinaryField('avatar',null=True)
+    gender = models.CharField(max_length=255, null=True)
+    address = models.CharField(max_length=255, null=True)
+
 
 # tạo lớp kế thừa
-
-
 class BaseModel (models.Model):
     create_date = models.DateField(auto_now_add=True,null=True) #auto_now_add: lấy ngày khi tạo
     update_date = models.DateField(auto_now=True,null=True) #auto_now: lấy ngày khi có sự thay đổi
@@ -81,8 +83,11 @@ class Comment(Interaction):
 
 
 class Like(Interaction):
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
 
+# chỉ like 1 lần
+    class Meta:
+        unique_together = ('user', 'lesson') #user và lesson là duy nhất không được trùng
 
 class Rating(Interaction):
     rate = models.SmallIntegerField(default=0)

@@ -1,4 +1,4 @@
-from ManagementCourseApp.models import Category,Course,Tag,Lesson,User, Comment
+from ManagementCourseApp.models import Category,Course,Tag,Lesson,User, Comment,Like
 from rest_framework import serializers
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -37,11 +37,24 @@ class LessonSerializer(BaseSerializer):
         fields = ['id', 'subject', 'image', 'tags', 'content', 'create_date', 'update_date']
 
 
+class LessonDetailSerializer(BaseSerializer):
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self,lesson):
+        request = self.context.get('request')
+        if request.user.is_authenticated: #ktra đang nhập
+            return lesson.like_set.filter(active = True).exists() #ktra like có tồn tại không
+
+    class Meta:
+        model = LessonSerializer.Meta.model
+        fields = LessonSerializer.Meta.fields + ['liked']
+
+
 class UserSerializer(serializers.ModelSerializer):
 #đăng ký
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email','username','password', 'avatar']
+        fields = ['username','password','first_name', 'last_name', 'email','avatar']
         extra_kwargs ={
             'password':{
                 'write_only':True
