@@ -41,11 +41,12 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 class LessonViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(active=True).all()
     serializer_class = serializers.LessonSerializer
-    # permission_classes = [perms.AdminAuthenticated]
-    #
+    # permission_classes = [permissions.AllowAny]
+
     def get_permissions(self):
         if self.action in ['add_comment', 'like']:
-            return [perms.AdminAuthenticated()]
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
 
 #     thêm comment
     @action(methods=['post'], url_path='comments', detail=True)
