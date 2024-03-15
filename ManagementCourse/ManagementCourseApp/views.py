@@ -94,3 +94,13 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     def current_user (self,request):
         request.user
         return Response(serializers.UserSerializer(request.user).data)
+
+    @action(methods=['post'], url_name='add_course', detail=True)
+    def add_course(self, request, pk):
+        user = self.get_object()
+        course_id = request.data.get('course_id', [])
+        print(course_id)
+        user.course_set.add(*course_id)
+
+        user.save()
+        return Response('Thành công')
