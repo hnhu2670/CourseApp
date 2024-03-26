@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-*6y9*t$4z_g=*m*tnr07%2cz$hlv^o3h8w_4-$=)!x1dgm8#e+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -154,6 +154,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # chứng thực
-CLIENT_ID = 'ykwM7j9N1XXGXZaT8EArPCcpzCVjN0Ya9yCifgTL'
-CLIENT_SECRET = 'nW2zSEM4ntrVKjFRn9gQASeCZbtVMLaMyEDXjIC4iHQpSWE2KNI9zfgdefGyrnPO32EXBYhfqMRAR1NKVyTaL2xfMt49vqgQV5bCj2Pt83uh9hXLm2zRKaPwq8KceXdy'
+CLIENT_ID = '1AiXXkVfi9qbUKx1DyOgZsctavNp41KtQ5cYyRR8'
+CLIENT_SECRET = 'f3UVn9RKPHYsU2ofcdmdSZsInsXaNQMGOF7MgenLfZdGHOZuz4kCO7b5DVhwyYJWQOXJ10FgMWh58oT1dqDXmJhuaAHYtXtvcYTiikEVpcaIYu2PCamBZXrB3FTQH1ZX'
 

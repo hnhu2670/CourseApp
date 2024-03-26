@@ -1,6 +1,9 @@
+
 from rest_framework import viewsets, generics, status,parsers,permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from ManagementCourseApp.models import Category,Course,Lesson,User,Comment,Like
 from ManagementCourseApp import serializers, paginators,perms
 from ManagementCourseApp.permission import IsAuthenticated,IsAdmin
@@ -14,7 +17,7 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     serializer_class = serializers.CategorySerializer
 
 
-class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
+class CourseViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Course.objects.filter(active=True).all() #lấy khóa học active
     serializer_class = serializers.CourseSerializer
     pagination_class = paginators.CoursePaginnator
@@ -34,6 +37,17 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 
         return Response(serializers.LessonSerializer(lessons, many=True, context={'request':request}).data,
                         status=status.HTTP_200_OK)
+
+    # thêm caterogy học cho khoá học
+    # @action(methods=['post'], detail=True)
+    # def add_caterogy(self, request,pk):
+    #     course = self.get_object()
+    #     category_id = request.data.get('category_id', [])
+    #     print(category_id)
+    #     course.category_set.add(*category_id)
+    #
+    #     course.save()
+    #     return Response('Thành công')
 
 
 # RetrieveAPIView: lấy chi tiết thông tin =>get
@@ -68,7 +82,23 @@ class LessonViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPI
 
         return Response(serializers.LessonDetailSerializer(self.get_object(),context={'request':request}).data,status=status.HTTP_200_OK)
 
+    @action(methods=['get'], detail=True) #detail=True => truyền id
+    def comment(self, request, pk):
+        comment = self.get_object().comment_set.all()
 
+        return Response(serializers.CommentSerializer(comment, many=True, context={'request':request}).data,
+                        status=status.HTTP_200_OK)
+
+
+    # @action(methods=['post'], detail=False)
+    # def add_lesson(self,request):
+    #     a = request.data.get('subject')
+    #     b = request.data.get('content')
+    #     d = Course.objects.get(pk =1)
+    #
+    #     c = Lesson.objects.create(subject=a,content =b,course =d)
+    #     return Response(serializers.LessonSerializer(c).data,
+    #                     status=status.HTTP_201_CREATED)
 # DestroyAPIView => xóa
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.all()
@@ -95,12 +125,17 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
         request.user
         return Response(serializers.UserSerializer(request.user).data)
 
-    @action(methods=['post'], url_name='add_course', detail=True)
-    def add_course(self, request, pk):
+    # đk khóa học
+
+    @action(methods=['post'], url_name='add_course',detail=True)
+    def add_course(self,request,pk):
         user = self.get_object()
-        course_id = request.data.get('course_id', [])
+        course_id = request.data.get('course_id',[])
         print(course_id)
         user.course_set.add(*course_id)
+        # course_id =["1"]
 
         user.save()
-        return Response('Thành công')
+        return Response('thanh cong')
+
+

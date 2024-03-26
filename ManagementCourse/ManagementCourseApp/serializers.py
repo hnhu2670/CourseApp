@@ -30,6 +30,29 @@ class CourseSerializer(BaseSerializer):
         model = Course
         fields = '__all__'
 
+    # def create(self, validated_data):
+    #     tags_data = validated_data.pop('tags')
+    #     users_data = validated_data.pop('user')# Retrieve the tags data
+    #     course = Course.objects.create(**validated_data)  # Create the Course object
+    #
+    #     # Use set() to assign the tags to the many-to-many field
+    #     # course.tags.set(tags_data)
+    #     # course.users.set(users_data)
+    #
+    #     for tag_data in tags_data:
+    #         tag_id = int(tag_data['id'])
+    #         tag = Tag.objects.get(id=tag_id)
+    #         course.tags.add(tag)
+    #
+    #     for user_data in users_data:
+    #         user_id = int(user_data['id'])  # Chuyển đổi giá trị 'id' thành số nguyên
+    #         user = User.objects.get(id=user_id)  # Lấy đối tượng User dựa trên 'id'
+    #         course.users.add(user)
+    #
+    #
+    #     return course
+
+
 
 class LessonSerializer(BaseSerializer):
     class Meta:
@@ -69,6 +92,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class AllCommentSerializer(BaseSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):

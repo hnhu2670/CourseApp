@@ -13,6 +13,8 @@ export default StyleSheet.create({
     },
     list_items: {
         height: windowHeight * 0.5,
+        display:'flex',
+        flexDirection:'row'
     },
     row: {
         flexDirection: "row",

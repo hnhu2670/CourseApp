@@ -6,7 +6,7 @@ from cloudinary.models import CloudinaryField
 
 
 class User(AbstractUser):
-    role = models.CharField(max_length=255,null=True, default='user')
+    role = models.CharField(max_length=255,null=True, default="student")
     avatar = CloudinaryField('avatar',null=True)
     gender = models.CharField(max_length=255, null=True)
     address = models.CharField(max_length=255, null=True)
@@ -37,8 +37,8 @@ class Course (BaseModel):
 
     # thiết lập khóa ngoại => khóa học thuộc danh mục
     category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_query_name='courses')
-    tags= models.ManyToManyField('Tag')
-
+    tags= models.ManyToManyField('Tag',null=True)
+    user= models.ManyToManyField('User',null=True)
     def __str__(self):
         return self.subject
 

@@ -24,8 +24,8 @@ const Login = ({ navigation }) => {
         const formData = new FormData();
         formData.append('username', username);
         formData.append('password', password);
-        formData.append('client_id', 'ykwM7j9N1XXGXZaT8EArPCcpzCVjN0Ya9yCifgTL')
-        formData.append('client_secret', 'nW2zSEM4ntrVKjFRn9gQASeCZbtVMLaMyEDXjIC4iHQpSWE2KNI9zfgdefGyrnPO32EXBYhfqMRAR1NKVyTaL2xfMt49vqgQV5bCj2Pt83uh9hXLm2zRKaPwq8KceXdy')
+        formData.append('client_id', '1AiXXkVfi9qbUKx1DyOgZsctavNp41KtQ5cYyRR8')
+        formData.append('client_secret', 'f3UVn9RKPHYsU2ofcdmdSZsInsXaNQMGOF7MgenLfZdGHOZuz4kCO7b5DVhwyYJWQOXJ10FgMWh58oT1dqDXmJhuaAHYtXtvcYTiikEVpcaIYu2PCamBZXrB3FTQH1ZX')
         formData.append('grant_type', 'password')
         try {
             if (!username || !password) {

@@ -1,8 +1,8 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const SERVER_URL = 'http://172.16.16.151:8000';
-// const SERVER = "http://172.16.16.151";
+// const SERVER_URL = 'http://172.16.16.13:8000';
+// const SERVER = "http://172.16.16.13";
 
 const SERVER_URL = 'http://192.168.1.9:8000';
 const SERVER = "http://192.168.1.9";
@@ -15,7 +15,8 @@ export const endpoints = {
     'lessons': (courseId) => `${SERVER_URL}/get_course/${courseId}/lessons/`,
     'lesson-details': (lessonId) => `${SERVER_URL}/get_lesson/${lessonId}/`,
     'comments': (lessonId) => `${SERVER_URL}/get_lesson/${lessonId}/comment/`,
-    'add-comment': (lessonId) => `${SERVER_URL}/get_lesson/${lessonId}/comments/`
+    'add-comment': (lessonId) => `${SERVER_URL}/get_lesson/${lessonId}/comments/`,
+    'register-courses':(courseId) => `${SERVER_URL}/user/${courseId}/add_course/`,
 }
 
 export const authApi = (token) => axios.create({

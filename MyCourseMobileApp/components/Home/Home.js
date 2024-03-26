@@ -1,4 +1,13 @@
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Style from "./Style";
 import React, { useContext, useEffect, useState } from "react";
 import API, { endpoints } from "../../configs/API";
@@ -7,147 +16,144 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import moment from "moment";
 import axios from "axios";
 import MyContext from "../../configs/MyContext";
-import Carousel from 'react-native-snap-carousel';
+import Carousel from "react-native-snap-carousel";
 import Color from "../../styles/Color";
 import { Entypo } from "@expo/vector-icons";
-
+import Search from "../Layout/Search";
+export const SLIDER_WIDTH = Dimensions.get("window").width;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
 const Home = ({ route, navigation }) => {
-    const [current_user, dispatch] = useContext(MyContext);
-    // console.log('current_user', current_user);
-    const [courses, setCourses] = useState(null);
-    const cateId = route.params?.cateId;
+  const [current_user, dispatch] = useContext(MyContext);
+  const [filter, setFilter] = useState([]);
 
-    useEffect(() => {
-        const loadCourses = async () => {
-            let url = endpoints['courses'];
+  // console.log('current_user', current_user.avatar);
+  const [courses, setCourses] = useState(null);
+  const cateId = route.params?.cateId;
 
-            if (cateId !== undefined && cateId != null)
-                url = `${url}?category_id=${cateId}`;
+  useEffect(() => {
+    const loadCourses = async () => {
+      let url = endpoints["courses"];
 
-            try {
-                let res = await axios.get(url);
-                setCourses(res.data.results);
-            } catch (ex) {
-                setCourses([]);
-                console.error(ex);
-            }
-        };
+      if (cateId !== undefined && cateId != null)
+        url = `${url}?category_id=${cateId}`;
 
-        loadCourses();
-    }, [cateId]);
-
-    const goToLesson = (courseId) => {
-        navigation.navigate("Lesson", { "courseId": courseId });
-    };
-    const views1 = [
-        {
-            imgUrl: "https://picsum.photos/200/300?random=1",
-            title: "Airport Cabs",
-        },
-        {
-            imgUrl: "https://picsum.photos/200/300?random=3",
-            title: "Gift Cards",
-        },
-        {
-            imgUrl: "https://picsum.photos/200/300?random=5",
-            title: "Hourly Stays",
-        },
-        {
-            imgUrl: "https://picsum.photos/200/300?random=7",
-            title: "Travel Insurance",
-        },
-        {
-            imgUrl: "https://picsum.photos/200/300?random=9",
-            title: "Forex",
-        },
-        {
-            imgUrl: "https://picsum.photos/200/300?random=11",
-            title: "HomeStays & Villas",
-        },
-    ];
-
-    const renderItem1 = ({ item }) => {
-        return (
-            <View style={Style.renderItem1_parentView}>
-                <Image source={{ uri: item.imgUrl }} style={Style.renderItem1_img} />
-            </View>
-        );
+      try {
+        let res = await axios.get(url);
+        // console.log(res.data.results)
+        setCourses(res.data.results);
+      } catch (ex) {
+        setCourses([]);
+        console.error(ex);
+      }
     };
 
-    return (
-        <View >
-            <View style={Style.headers}>
-                <View style={Style.text}>
-                    <Text style={Style.title}>Hello,</Text>
-                    <Text style={Style.name}>{current_user.last_name} {current_user.first_name}</Text>
-                </View>
-                <Image
-                    style={Style.avatar}
-                    source={{ uri: current_user?.avatar }}
-                />
-            </View>
-            <View style={Style.carousel}>
-                <Carousel
-                    layout={"default"}
-                    data={views1}
-                    renderItem={renderItem1}
-                    sliderWidth={400}
-                    itemWidth={350}
-                />
-            </View>
-            <View style={MyStyles.sub_content}>
-                <Text style={MyStyles.subject}>Danh sách khóa học</Text>
-                <ScrollView style={MyStyles.list_items}>
-                    {courses === null ? (
-                        <ActivityIndicator />
-                    ) : (
-                        courses.map((c) => (
-                            <View style={MyStyles.row} key={c.id}>
-                                <TouchableOpacity
-                                    style={{ width: '100%', backgroundColor: "red", borderRadius: 50 }}
-                                    onPress={() => goToLesson(c.id)}>
-                                    <Image
-                                        source={{ uri: c.image }}
-                                        style={[MyStyles.m_10, { width: 80, height: 80 }]}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => goToLesson(c.id)}>
-                                    <Text style={[MyStyles.m_10, MyStyles.title]}>{c.subject}</Text>
-                                    <Text style={MyStyles.m_10}>{moment(c.created_date).fromNow()}</Text>
+    loadCourses();
+  }, [cateId]);
 
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ backgroundColor: 'red', borderRadius: 20, padding: 5 }}>
-                                    <Entypo name='plus' size={30} color={'black'} />
-                                </TouchableOpacity>
-                            </View>
-                        ))
-                    )}
-                </ScrollView>
-            </View>
-        </View>
+  const goToLesson = (courseId) => {
+    navigation.navigate("Lesson", { courseId: courseId });
+  };
+  const registerCourse = async (course_id) => {
+    const formData = new FormData();
+    formData.append("course_id", course_id);
+    try {
+      let response = await axios.post(
+        endpoints["register-courses"](course_id),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
+      alert("Thành công");
+    } catch (error) {
+      console.error(error);
+      alert("Đã xảy ra lỗi");
+    }
+  };
+  // search
+  const search = (text) => {
+    const filterName = courses.filter((item) =>
+      // toLowerCase() chuyển chữ hoa thành thường
+      item.name.toLowerCase().includes(text.toLowerCase())
     );
+    // setCommittees(filterName);
+    setFilter(filterName);
+    console.log("Search text:", text);
+  };
+  const image =
+    "https://res.cloudinary.com/dhdca9ibd/image/upload/v1711334976/courseapp/lgdkxuktbuj76pjzmntm.jpg";
+  return (
+    <View>
+      <View style={Style.headers}>
+        <View style={Style.text}>
+          <Text style={Style.title}>Hello,</Text>
+          <Text style={Style.name}>
+            {current_user.last_name} {current_user.first_name}
+          </Text>
+        </View>
+        <Image style={Style.avatar} source={{ uri: current_user?.avatar }} />
+      </View>
+
+      <View style={MyStyles.sub_content}>
+        <ImageBackground
+          source={image}
+          resizeMode="cover"
+          style={Style.header_contain}
+        >
+          <Text>Find a course want to learn </Text>
+          <Search onSearch={search} />
+        </ImageBackground>
+
+        <Text style={MyStyles.subject}>Danh sách khóa học</Text>
+        <ScrollView
+          horizontal //cho phép cuộn theo chiều ngang
+          showsHorizontalScrollIndicator={false} //tắt thanh cuộn
+          contentContainerStyle={Style.sliderContainer} //chỉnh css
+        >
+          {courses === null ? (
+            <ActivityIndicator />
+          ) : (
+            courses.map((c, index) => (
+              <View key={index} style={Style.slide}>
+                <TouchableOpacity
+                  style={{ width: "100%", borderRadius: 50 }}
+                  onPress={() => goToLesson(c.id)}
+                >
+                  <Image
+                    source={{
+                      uri: "https://res.cloudinary.com/dhdca9ibd/image/upload/v1711334976/courseapp/lgdkxuktbuj76pjzmntm.jpg",
+                    }}
+                    style={[MyStyles.m_10, { height: 170, width: "100%" }]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToLesson(c.id)}>
+                  <Text style={[MyStyles.m_10, MyStyles.title]}>
+                    {c.subject}
+                  </Text>
+                  <Text style={MyStyles.m_10}>
+                    {moment(c.created_date).fromNow()}
+                  </Text>
+                </TouchableOpacity>
+                {/* <TouchableOpacity
+                  onPress={() => registerCourse(c.id)}
+                  style={{
+                    backgroundColor: Color.main_color,
+                    borderRadius: 20,
+                    padding: 5,
+                  }}
+                >
+                  <Entypo name="plus" size={30} color={"#ffffff"} />
+                </TouchableOpacity> */}
+              </View>
+            ))
+          )}
+        </ScrollView>
+      </View>
+    </View>
+  );
 };
-// const styles = StyleSheet.create({
-//     renderItem1_parentView: {
-//         marginVertical: 20,
-//         backgroundColor: "black",
-//         borderRadius: 18,
-//         height: 170,
-//         width: 350,
-//         justifyContent: "space-around",
-//         alignItems: "center",
-//         overflow: "hidden",
-//         // marginHorizontal: 10
-//     },
-//     renderItem1_img: {
-//         height: 140,
-//         width: 350
-//     },
-
-// }
-// );
-
 
 export default Home;

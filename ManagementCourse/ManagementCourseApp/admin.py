@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.template.context_processors import request
 from django.template.response import TemplateResponse
 
-from .models import Category,Course,Lesson,Tag
+from .models import Category,Course,Lesson,Tag, User
 from django.utils.html import mark_safe
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
@@ -66,11 +66,17 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = ['pk', 'subject']
     search_fields =['subject']
 
+
+class UserAdmin(admin.ModelAdmin):
+    # ghi đè lại thuộc tính
+    list_display = ['pk', 'first_name']
 # Register your models here.
 
 
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Course,CoursesAdmin)
-admin.site.register(Lesson,LessonAdmin)
-admin.site.register(Tag)
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Course,CoursesAdmin)
+admin_site.register(Lesson,LessonAdmin)
+admin_site.register(User,UserAdmin)
+
+admin_site.register(Tag)
 
