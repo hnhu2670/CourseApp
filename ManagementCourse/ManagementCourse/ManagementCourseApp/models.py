@@ -33,7 +33,7 @@ class Category(BaseModel):
 class Course (BaseModel):
     subject = models.CharField(max_length=255, null=False)
     description = RichTextField()
-    image = models.ImageField(upload_to='courses/%Y/%m/',null=True, blank=True)
+    image = CloudinaryField('image', null=True)
 
     # thiết lập khóa ngoại => khóa học thuộc danh mục
     category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_query_name='courses')
@@ -49,8 +49,7 @@ class Course (BaseModel):
 class Lesson(BaseModel):
     subject = models.CharField(max_length=255, null=False)
     content = RichTextField()
-    image = models.ImageField(upload_to='lessons/%Y/%m/',null=True, blank=True)
-
+    image = CloudinaryField('image',null = True)
     # bài học thuộc khóa học nào
     course = models.ForeignKey(Course,on_delete=models.CASCADE)
 

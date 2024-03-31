@@ -27,11 +27,16 @@ class BaseSerializer(serializers.ModelSerializer):
             return '/static/%s' % course.image.name
 
 
-class CourseSerializer(BaseSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
+    def get_image_url(self, user):
+        return user.image.url
+
+
+    image_url = serializers.SerializerMethodField(method_name='get_image_url')
     # def create(self, validated_data):
     #     tags_data = validated_data.pop('tags')
     #     users_data = validated_data.pop('user')# Retrieve the tags data
@@ -54,11 +59,16 @@ class CourseSerializer(BaseSerializer):
     #
     #     return course
 
-class LessonSerializer(BaseSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['id', 'subject', 'image', 'tags', 'content', 'create_date', 'update_date']
+        fields = ['id', 'subject', 'image', 'tags', 'content', 'create_date', 'update_date','image_url']
 
+    def get_image_url(self, user):
+        return user.image.url
+
+
+    image_url = serializers.SerializerMethodField(method_name='get_image_url')
 
 class LessonDetailSerializer(BaseSerializer):
     liked = serializers.SerializerMethodField()
