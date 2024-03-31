@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from ManagementCourseApp.models import Category,Course,Tag,Lesson,User, Comment,Like
 from rest_framework import serializers
 
@@ -25,11 +27,16 @@ class BaseSerializer(serializers.ModelSerializer):
             return '/static/%s' % course.image.name
 
 
-class CourseSerializer(BaseSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
+    def get_image_url(self, user):
+        return user.image.url
+
+
+    image_url = serializers.SerializerMethodField(method_name='get_image_url')
     # def create(self, validated_data):
     #     tags_data = validated_data.pop('tags')
     #     users_data = validated_data.pop('user')# Retrieve the tags data
@@ -52,13 +59,16 @@ class CourseSerializer(BaseSerializer):
     #
     #     return course
 
-
-
-class LessonSerializer(BaseSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['id', 'subject', 'image', 'tags', 'content', 'create_date', 'update_date']
+        fields = ['id', 'subject', 'image', 'tags', 'content', 'create_date', 'update_date','image_url']
 
+    def get_image_url(self, user):
+        return user.image.url
+
+
+    image_url = serializers.SerializerMethodField(method_name='get_image_url')
 
 class LessonDetailSerializer(BaseSerializer):
     liked = serializers.SerializerMethodField()
@@ -77,12 +87,21 @@ class UserSerializer(serializers.ModelSerializer):
 #đăng ký
     class Meta:
         model = User
-        fields = ['username','password','first_name', 'last_name', 'email','avatar']
+        fields = ['username','password','first_name', 'last_name', 'email','avatar','avatar_url']
         extra_kwargs ={
             'password':{
                 'write_only':True
             }
         }
+
+    def get_image_url(self, user):
+        base_url = 'https://res.cloudinary.com/dyfzuigha/'
+
+        if user.avatar and base_url not in urljoin(base_url, user.avatar.url):
+            return user.avatar.url
+
+    avatar_url = serializers.SerializerMethodField(method_name='get_image_url')
+#
 # ghi đè phương thức create
     def create(self, validated_data):
         data=validated_data.copy()

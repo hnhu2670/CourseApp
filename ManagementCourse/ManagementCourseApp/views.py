@@ -16,6 +16,12 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
 
+    @action(methods=['get'], detail=True)  # detail=True => truyền id
+    def courses(self, request, pk):
+        courses = self.get_object().course_set.filter(active=True).all()
+
+        return Response(serializers.CourseSerializer(courses, many=True, context={'request': request}).data,
+                        status=status.HTTP_200_OK)
 
 class CourseViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Course.objects.filter(active=True).all() #lấy khóa học active
