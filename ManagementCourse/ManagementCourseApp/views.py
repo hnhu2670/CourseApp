@@ -1,4 +1,6 @@
-
+from django.core.mail import send_mail
+from django.core import mail
+from django.http import HttpResponse
 from rest_framework import viewsets, generics, status,parsers,permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -8,10 +10,7 @@ from ManagementCourseApp.models import Category,Course,Lesson,User,Comment,Like
 from ManagementCourseApp import serializers, paginators,perms
 from ManagementCourseApp.permission import IsAuthenticated,IsAdmin
 
-
 # Create your views here.
-
-
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
@@ -111,7 +110,22 @@ class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateA
     serializer_class = serializers.CommentSerializer
     permission_classes = [perms.OwnerAuthenticated]
 
-
+def send_email(subject='Bạn đã đăng ký khoá học tại trung tâm', body='Bạn đã đăng ký khoá học tại trung tâm',
+               listreceiver = []):
+    try:
+        connection = mail.get_connection()
+        email1 = mail.EmailMessage(
+            subject,
+            body,
+            'ĐĂNG KÝ KHOÁ HỌC <hieu01659505026@gmail.com>',
+            listreceiver,
+            connection=connection
+        )
+        email1.content_subtype = 'html'
+        email1.send()
+        return True
+    except ValueError:
+        return False
 # CreateAPIView: update và thêm ==> post
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True).all()
@@ -137,11 +151,18 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     def add_course(self,request,pk):
         user = self.get_object()
         course_id = request.data.get('course_id',[])
+        print(user.email)
         print(course_id)
         user.course_set.add(*course_id)
-        # course_id =["1"]
 
+        list_send_email = []
+        list_send_email.append(user.email)
+        send_email(subject="ĐĂNG KÝ KHOÁ HỌC",
+                       body="Khóa học của bạn đã được xác nhận đăng ký thành công",
+                       listreceiver=list_send_email)
         user.save()
-        return Response('thanh cong')
+        return Response('Đăng ký thành công',status=status.HTTP_201_CREATED)
+
+
 
 
