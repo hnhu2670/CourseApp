@@ -110,14 +110,15 @@ class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateA
     serializer_class = serializers.CommentSerializer
     permission_classes = [perms.OwnerAuthenticated]
 
-def send_email(subject='Bạn đã đăng ký khoá học tại trung tâm', body='Bạn đã đăng ký khoá học tại trung tâm',
+def send_email(subject='Bạn đã đăng ký khoá học tại trung tâm',
+               body='Bạn đã đăng ký khoá học tại trung tâm',
                listreceiver = []):
     try:
         connection = mail.get_connection()
         email1 = mail.EmailMessage(
             subject,
             body,
-            'ĐĂNG KÝ KHOÁ HỌC <hieu01659505026@gmail.com>',
+            'ĐĂNG KÝ KHOÁ HỌC <huynhnhu2670@gmail.com>',
             listreceiver,
             connection=connection
         )

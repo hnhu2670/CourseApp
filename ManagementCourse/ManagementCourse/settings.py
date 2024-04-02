@@ -160,8 +160,10 @@ CLIENT_SECRET = 'f3UVn9RKPHYsU2ofcdmdSZsInsXaNQMGOF7MgenLfZdGHOZuz4kCO7b5DVhwyYJ
 # gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'hieu01659505026@gmail.com'
-EMAIL_HOST_PASSWORD = 'qxrprwbbwekdjlmp'
+# EMAIL_HOST_USER = 'hieu01659505026@gmail.com'
+# EMAIL_HOST_PASSWORD = 'qxrprwbbwekdjlmp'
+EMAIL_HOST_USER='huynhnhu2670@gmail.com'
+EMAIL_HOST_PASSWORD ='rdamfdblikobwbdg'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

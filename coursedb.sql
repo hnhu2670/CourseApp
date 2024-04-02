@@ -346,7 +346,7 @@ CREATE TABLE `managementcourseapp_course_user` (
   KEY `ManagementCourseApp__user_id_d22a0b90_fk_Managemen` (`user_id`),
   CONSTRAINT `ManagementCourseApp__course_id_06ccd577_fk_Managemen` FOREIGN KEY (`course_id`) REFERENCES `managementcourseapp_course` (`id`),
   CONSTRAINT `ManagementCourseApp__user_id_d22a0b90_fk_Managemen` FOREIGN KEY (`user_id`) REFERENCES `managementcourseapp_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vi_0900_as_cs;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vi_0900_as_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +355,7 @@ CREATE TABLE `managementcourseapp_course_user` (
 
 LOCK TABLES `managementcourseapp_course_user` WRITE;
 /*!40000 ALTER TABLE `managementcourseapp_course_user` DISABLE KEYS */;
-INSERT INTO `managementcourseapp_course_user` VALUES (3,1,1),(1,1,4),(2,2,3),(4,3,3),(5,4,4),(6,5,3),(7,6,4);
+INSERT INTO `managementcourseapp_course_user` VALUES (3,1,1),(20,1,3),(1,1,4),(8,2,1),(2,2,3),(11,2,4),(4,3,3),(5,4,4),(17,5,1),(6,5,3),(7,6,4);
 /*!40000 ALTER TABLE `managementcourseapp_course_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -546,7 +546,7 @@ CREATE TABLE `managementcourseapp_user` (
 
 LOCK TABLES `managementcourseapp_user` WRITE;
 /*!40000 ALTER TABLE `managementcourseapp_user` DISABLE KEYS */;
-INSERT INTO `managementcourseapp_user` VALUES (1,'pbkdf2_sha256$720000$qnyQBiVS3TxmAjy1qTWu99$0zQ8xRLCFlA22mDR7NeZPCW/6MPqVPxnjxEvEOC+EyQ=','2024-03-31 16:20:47.928700',1,'admin','admin','admin','admin@gmail.com',1,1,'2024-03-21 02:39:05.892964',NULL,'admin',NULL,NULL),(3,'pbkdf2_sha256$720000$h9y7oMNGuQNid1Kqcs46DD$3o7hDFDFItG9qkjP8ihgOcOZmdCr5kowv+HKGo23K8M=',NULL,0,'nhu','Huỳnh','Như','',0,1,'2024-03-21 02:48:02.060871','image/upload/https://res.cloudinary.com/dhdca9ibd/image/upload/v1711334976/courseapp/lgdkxuktbuj76pjzmntm.jpg','admin',NULL,NULL),(4,'pbkdf2_sha256$720000$bIvqfkiw75RctXVfKnjGbj$8qVA9KClgNTVReSbp2jfQBTrS/0uL1kmkZ0BgPGELp8=',NULL,0,'user1','Huỳnh','Như','',0,1,'2024-03-21 02:48:15.604708',NULL,'user',NULL,NULL),(5,'pbkdf2_sha256$720000$3z5o1tODbcfuGlmF4QYPZH$0KQH1JF3UCS7AXb9ORvEIxFzv9iJ5+YOP79TtDTf8rg=',NULL,0,'user2','Huỳnh','Như','',0,1,'2024-03-21 02:48:20.478191',NULL,'user',NULL,NULL),(6,'pbkdf2_sha256$720000$3AWWluUgtZMzbCMx9EulYM$lJS0WRkovGkmniInfCs9LQ2Lps8hnKEEZW5mnN9aRFc=',NULL,0,'user3','Huỳnh','Như','',0,1,'2024-03-21 02:48:24.704830',NULL,'user',NULL,NULL),(8,'pbkdf2_sha256$720000$Z0HmZhwRwZLX70JvoBf3lB$iyfrNgAYLF1MeT+cXqFpLDjKPqt/n+rHwH/QsswYwug=','2024-03-21 03:08:39.612668',1,'Admin','Admin','Admin','a@gmail.com',1,1,'2024-03-21 03:02:08.031293',NULL,NULL,NULL,NULL),(9,'pbkdf2_sha256$720000$D4BbP6SPU3VVt9f3lfOPnF$sxAVU5CTPXzhmWzQtB/eqLCc3/P9WIab9uNw2xF6JV8=',NULL,0,'User8','Lê','Như','',0,1,'2024-03-31 15:14:18.299514',NULL,'student',NULL,NULL),(10,'pbkdf2_sha256$720000$AgUfkrsxjwHRwuQaix1B8A$UOi0UJn5V6gkbIrrSBd2t/JoD2yLRCJpUEFAuHs+9Rs=',NULL,0,'User9','Lê','Như','',0,1,'2024-03-31 15:19:22.952621',NULL,'student',NULL,NULL);
+INSERT INTO `managementcourseapp_user` VALUES (1,'pbkdf2_sha256$720000$qnyQBiVS3TxmAjy1qTWu99$0zQ8xRLCFlA22mDR7NeZPCW/6MPqVPxnjxEvEOC+EyQ=','2024-03-31 16:20:47.928700',1,'admin','admin','admin','lth.nhu2670@gmail.com',1,1,'2024-03-21 02:39:05.892964',NULL,'admin',NULL,NULL),(3,'pbkdf2_sha256$720000$h9y7oMNGuQNid1Kqcs46DD$3o7hDFDFItG9qkjP8ihgOcOZmdCr5kowv+HKGo23K8M=',NULL,1,'nhu','Huỳnh','Như','lth.nhu2670@gmail.com',0,1,'2024-03-21 02:48:02.060871','image/upload/https://res.cloudinary.com/dhdca9ibd/image/upload/v1711334976/courseapp/lgdkxuktbuj76pjzmntm.jpg','admin',NULL,NULL),(4,'pbkdf2_sha256$720000$bIvqfkiw75RctXVfKnjGbj$8qVA9KClgNTVReSbp2jfQBTrS/0uL1kmkZ0BgPGELp8=',NULL,0,'user1','Huỳnh','Như','lth.nhu2670@gmail.com',0,1,'2024-03-21 02:48:15.604708',NULL,'user',NULL,NULL),(5,'pbkdf2_sha256$720000$3z5o1tODbcfuGlmF4QYPZH$0KQH1JF3UCS7AXb9ORvEIxFzv9iJ5+YOP79TtDTf8rg=',NULL,0,'user2','Huỳnh','Như','lth.nhu2670@gmail.com',0,1,'2024-03-21 02:48:20.478191',NULL,'user',NULL,NULL),(6,'pbkdf2_sha256$720000$3AWWluUgtZMzbCMx9EulYM$lJS0WRkovGkmniInfCs9LQ2Lps8hnKEEZW5mnN9aRFc=',NULL,0,'user3','Huỳnh','Như','',0,1,'2024-03-21 02:48:24.704830',NULL,'user',NULL,NULL),(8,'pbkdf2_sha256$720000$Z0HmZhwRwZLX70JvoBf3lB$iyfrNgAYLF1MeT+cXqFpLDjKPqt/n+rHwH/QsswYwug=','2024-03-21 03:08:39.612668',1,'Admin','Admin','Admin','a@gmail.com',1,1,'2024-03-21 03:02:08.031293',NULL,NULL,NULL,NULL),(9,'pbkdf2_sha256$720000$D4BbP6SPU3VVt9f3lfOPnF$sxAVU5CTPXzhmWzQtB/eqLCc3/P9WIab9uNw2xF6JV8=',NULL,0,'User8','Lê','Như','',0,1,'2024-03-31 15:14:18.299514',NULL,'student',NULL,NULL),(10,'pbkdf2_sha256$720000$AgUfkrsxjwHRwuQaix1B8A$UOi0UJn5V6gkbIrrSBd2t/JoD2yLRCJpUEFAuHs+9Rs=',NULL,0,'User9','Lê','Như','',0,1,'2024-03-31 15:19:22.952621',NULL,'student',NULL,NULL);
 /*!40000 ALTER TABLE `managementcourseapp_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -805,4 +805,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-31 23:40:05
+-- Dump completed on 2024-04-02 16:32:56
