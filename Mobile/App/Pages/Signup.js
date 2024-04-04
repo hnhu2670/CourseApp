@@ -21,6 +21,8 @@ import { endpoints } from "../Shared/GlobalApi";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
+import ToastifyMessage from "../Shared/ToastifyMessage";
 
 export default function Signup() {
   const navigation = useNavigation();
@@ -33,33 +35,65 @@ export default function Signup() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const validateInput = () => {
+    for (let field in user) {
+      if (user[field] === "") {
+        setMessage("Vui lòng điền đầy đủ thông tin");
+        setShow(true);
+        return false;
+      }
+    }
+    return true;
+  };
 
   const register = async () => {
     setLoading(true);
+    if (!validateInput()) {
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData();
     for (let field in user) {
       formData.append(field, user[field]);
-      // console.log(user[field]);
     }
     try {
+      setLoading(true);
       let res = await axios.post(endpoints["register"], formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      // console.info(res.data);
+      setMessage("Đăng ký thành công");
+      setShow(true);
+
       navigation.navigate("Login");
+
+      setLoading(false);
     } catch (ex) {
       console.error(ex);
-    } finally {
+      setMessage("Đã xảy ra lỗi");
+      setShow(true);
       setLoading(false);
     }
   };
+
   const change = (field, value) => {
     setUser((current) => {
       return { ...current, [field]: value };
     });
   };
+  useEffect(() => {
+    if (show === true) {
+      const timer = setTimeout(() => {
+        setShow(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [show]);
   return (
     <View className="bg-white h-full w-full">
       <StatusBar style="light" />
@@ -179,6 +213,13 @@ export default function Signup() {
           </Animated.View>
         </View>
       </View>
+      {show === true && (
+        <ToastifyMessage
+          type="danger"
+          text={message}
+          description="Đăng ký thất bại"
+        />
+      )}
     </View>
   );
 }

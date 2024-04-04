@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// const SERVER_URL = "http://192.168.1.2:8000";
-// const SERVER = "http://192.168.1.2:8000";
-const SERVER_URL = "http://172.16.17.35:8000";
-const SERVER = "http://172.16.17.35:8000";
+const SERVER_URL = "http://192.168.1.2:8000";
+const SERVER = "http://192.168.1.2:8000";
+// const SERVER_URL = "http://172.16.17.35:8000";
+// const SERVER = "http://172.16.17.35:8000";
 export const endpoints = {
   login: `${SERVER_URL}/o/token/`,
   register: `${SERVER_URL}/user/`,

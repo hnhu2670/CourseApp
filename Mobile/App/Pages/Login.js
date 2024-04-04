@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { endpoints } from "../Shared/GlobalApi";
 import axios from "axios";
 import { useEffect } from "react";
+import ToastifyMessage from "../Shared/ToastifyMessage";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -193,6 +194,13 @@ export default function Login() {
           </Animated.View>
         </View>
       </View>
+      {show === true && (
+        <ToastifyMessage
+          type="danger"
+          text={error}
+          description="Đăng nhập thất bại"
+        />
+      )}
     </View>
   );
 }

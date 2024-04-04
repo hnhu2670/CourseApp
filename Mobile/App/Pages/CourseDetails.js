@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   ScrollView,
   ImageBackground,
+  Alert,
+  ActivityIndicatorBase,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,16 +22,20 @@ import CourseContent from "./CourseContent";
 import axios from "axios";
 import { api, endpoints } from "../Shared/GlobalApi";
 import MyContext from "../Shared/MyContext";
+import { Popup } from "react-native-popup-confirm-toast";
+import ToastifyMessage from "../Shared/ToastifyMessage";
 
 export default function CourseDetails() {
   const navigation = useNavigation();
   const [current_user, dispatch] = useContext(MyContext);
-  console.log(current_user);
+  // console.log(current_user);
   const param = useRoute();
   const { videoCourse, categories } = param.params;
   const [lesson, setLessons] = useState(null);
   const [check, setCheck] = useState(null);
-
+  const [show, setShow] = useState("");
+  const [messager, setMessager] = useState("");
+  const [loading, setLoading] = useState(false);
   let count = 0;
   const checkRegister = async () => {
     try {
@@ -52,9 +58,12 @@ export default function CourseDetails() {
               <MaterialIcons name="local-mall" size={26} color="gray" />
             </View>
             <TouchableOpacity
+              onPress={() => {
+                Alert.alert("Thông báo", "Bạn đã đăng ký khóa học");
+              }}
               style={[styles.buyCourseBtn, { backgroundColor: "gray" }]}
             >
-              <Text style={styles.buyText}>Buy Now</Text>
+              <Text style={styles.buyText}>Successfully</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -82,32 +91,55 @@ export default function CourseDetails() {
       console.error(ex);
     }
   };
-  const registerCourse = async (course_id) => {
-    const formData = new FormData();
-    formData.append("course_id", course_id);
-    console.log("usser", current_user.id);
-    try {
-      let response = await axios.post(
-        endpoints["register-courses"](current_user.id),
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
-      alert("Thành công");
-      navigation.navigate("home");
-    } catch (error) {
-      console.error(error);
-      alert("Đã xảy ra lỗi");
+  const registerCourse = async (course_id) => {
+    Alert.alert("Register of course", "Do you want register of course", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => register() },
+    ]);
+
+    async function register() {
+      const formData = new FormData();
+      formData.append("course_id", course_id);
+      console.log("usser", current_user.id);
+      try {
+        setLoading(true);
+        let response = await axios.post(
+          endpoints["register-courses"](current_user.id),
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setMessager("Đăng ký thành công");
+        setShow("success");
+        setLoading(false);
+        // navigation.navigate("home");
+      } catch (error) {
+        console.error(error);
+        setMessager("Đã xảy ra lỗi");
+        setShow(danger);
+        setLoading(false);
+      }
     }
   };
+
   useEffect(() => {
     loadLessons();
     checkRegister();
-  }, []);
+    if (show !== "") {
+      const timer = setTimeout(() => {
+        setShow("");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [show]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -175,11 +207,11 @@ export default function CourseDetails() {
                       <TouchableOpacity
                         key={s.id}
                         style={styles.lessonItem}
-                        onPress={() =>
+                        onPress={() => {
                           navigation.navigate("video-player", {
                             detailCourse: s,
-                          })
-                        }
+                          });
+                        }}
                       >
                         <Text style={styles.indexNum}>0{count}</Text>
                         <Text style={styles.partTitle}>{s.subject}</Text>
@@ -193,7 +225,11 @@ export default function CourseDetails() {
                     </>
                   ) : (
                     <>
-                      <TouchableOpacity key={s.id} style={styles.lessonItem}>
+                      <TouchableOpacity
+                        key={s.id}
+                        style={styles.lessonItem}
+                        onPress={() => alert("Bạn chưa đăng ký khoá học")}
+                      >
                         <Text style={styles.indexNum}>0{count}</Text>
                         <Text style={styles.partTitle}>{s.subject}</Text>
                         <FontAwesome
@@ -211,7 +247,30 @@ export default function CourseDetails() {
           )}
         </ScrollView>
       </View>
-      <BottomNavigationBar />
+      {loading == true ? (
+        <>
+          <ActivityIndicator />
+        </>
+      ) : (
+        <>
+          <BottomNavigationBar />
+        </>
+      )}
+
+      {show == "success" && (
+        <ToastifyMessage
+          type="success"
+          text={messager}
+          description="Đăng ký thành công"
+        />
+      )}
+      {show == "danger" && (
+        <ToastifyMessage
+          type="danger"
+          text={messager}
+          description="Đăng ký thất bại"
+        />
+      )}
     </SafeAreaView>
   );
 }
