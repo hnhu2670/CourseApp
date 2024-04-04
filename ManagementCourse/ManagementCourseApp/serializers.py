@@ -87,7 +87,7 @@ class UserSerializer(serializers.ModelSerializer):
 #đăng ký
     class Meta:
         model = User
-        fields = ['username','password','first_name', 'last_name', 'email','avatar','avatar_url']
+        fields = ['id','username','password','first_name', 'last_name', 'email','avatar','avatar_url']
         # fields='__all__'
         extra_kwargs ={
             'password':{

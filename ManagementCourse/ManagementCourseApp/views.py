@@ -1,3 +1,5 @@
+from distutils.command.check import check
+
 from django.core.mail import send_mail
 from django.core import mail
 from django.http import HttpResponse
@@ -128,7 +130,8 @@ def send_email(subject='Bạn đã đăng ký khoá học tại trung tâm',
     except ValueError:
         return False
 # CreateAPIView: update và thêm ==> post
-class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
+
+class UserViewSet(viewsets.ViewSet, generics.CreateAPIView,generics.UpdateAPIView):
     queryset = User.objects.filter(is_active=True).all()
     serializer_class = serializers.UserSerializer
     parser_classes = [parsers.MultiPartParser]
@@ -142,7 +145,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
     # lấy user theo current => chứng thực từ token
     @action(methods=['get'], url_name='current-user',detail=False)
-    def current_user (self,request):
+    def current_user(self,request):
         request.user
         return Response(serializers.UserSerializer(request.user).data)
 
@@ -150,10 +153,10 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
     @action(methods=['post'], url_name='add_course',detail=True)
     def add_course(self,request,pk):
-        user = self.get_object()
+        user = User.objects.get(id=pk)
         course_id = request.data.get('course_id',[])
-        print(user.email)
-        print(course_id)
+        print(user.id)
+        print(self.get_object())
         user.course_set.add(*course_id)
 
         list_send_email = []
@@ -164,6 +167,16 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
         user.save()
         return Response('Đăng ký thành công',status=status.HTTP_201_CREATED)
 
+
+    @action(methods=['get'], url_name='check',detail=True)
+    def check(self,request, pk):
+        id_course = request.GET.get('course')
+        course = Course.objects.get(id=id_course)
+        check = course.user.filter(id=pk).exists()
+        if check:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 
 
